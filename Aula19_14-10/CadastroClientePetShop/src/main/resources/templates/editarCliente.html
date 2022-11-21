@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	<head>
+		<meta charset="UTF-8">
+		<title>Editar</title>
+			<!--Import Google Icon Font-->
+      		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      		<!--Import materialize.css-->
+      	 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+      		<!--Let browser know website is optimized for mobile-->
+      		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		
+	</head>
+	<body>
+		<header>
+				
+				<a href="/clientesTabela" class="waves-effect waves-light btn"><i class="material-icons left">format_list_bulleted</i>Listar Tabela</a>
+		
+		</header>
+	
+	
+	<div th:"cliente : $(cliente)" >
+		
+		<form class="container" th:action="@{/editar}" method="post">
+			
+			<input hidden="true"   th:value="${cliente.id}"  name="id" ></input>
+			Nome: <input   th:value="${cliente.nome}"  name="nome" ></input>
+			Cpf: <input   th:value="${cliente.cpf}"  name="cpf" ></input>
+			Idade: <input   th:value="${cliente.idade}"  name="idade" ></input>
+		
+		
+		
+			<button class="waves-effect waves-light btn" type="submit">Enviar</button>
+			
+		
+		
+		
+		</form>
+	
+	
+	
+	</div>
+	
+	
+	
+	</body>
+</html>

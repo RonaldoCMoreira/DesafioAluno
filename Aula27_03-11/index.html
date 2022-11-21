@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/0.7.13/vue-router.min.js"> </script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="branding">
+                <H3>Cadastro Pessoas</H3>
+            </div>
+        </header>
+        <main id="app">
+            <router-view></router-view>
+        </main>
+    </div>
+
+    <template id="pessoaLista">
+        <div class="action">
+            <a class="btn btn-default" v-link="{path:'/adicionarPessoa'}">
+                <span class="lyphicon glyphicon-plus"></span>
+                Cadastrar Pessoa
+            </a>
+        </div>
+        
+        
+        <div class="filters row">
+            <div class="form-group col-sm-3">
+                <input v-model="searchKey" class="form-control" placeholder="Procurar" id="search-element" required/>
+            </div>
+        </div>
+        <table id="myTable" class="table highlight bordered">
+             <thead>
+                <tr>
+                    <th> Nome</th>
+                    <th> Profissão</th>
+                    <th> Idade</th>
+					<th> Deletar</th>
+					<th> Editar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="pessoa in Pessoas| filterBy searchKey in 'nome'">
+                    <td>
+                        {{pessoa.nome}}
+                    </td>
+
+                    <td>
+                        {{pessoa.profissao}}
+                    </td>
+
+                    <td>
+                        {{pessoa.idade}}
+                    </td>
+                    
+                    <td>
+                        <a class "btn btn-danger btn-xs" v-link="{name: 'pessoa-deletar', params: {pessoa_id: pessoa.id}}">Deletar</a>
+                    </td>
+					
+                    <td>
+                        <a class="btn btn-success btn-sm" v-link="{name: 'pessoa-editar', params:{pessoa_id:pessoa.id}}">Editar</a>
+                    </td>
+                <tr>
+            <tbody>
+
+        </table>
+
+    </template>
+
+
+    <template id="adicionarPessoa">
+        <p>Adicionar Pessoa</p>
+
+        <form @submit.prevent="criarPessoa">
+            <div class="form-group">
+                <label for="nome">Nome</label><br>
+                <input class="form-control" id="nome" type="text" v-model="nome" required   />
+            </div>
+
+            <div class="form-group">
+                <label for="profissao">Profissão</label><br>
+                <input class="form-control" id="profissao" type="text" v-model="profissao" required   />
+            </div>
+
+            <div class="form-group">
+                <label for="idade">Idade</label><br>
+                <input class="form-control" id="idade" type="text" v-model="idade" required   />
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 58vw; margin-left: 7vw; margin-top: 50px">Cadastrar</button>
+
+        </form>
+        
+    </template>
+	
+	<template id="pessoa-deletar">
+        <h2>Deletar a pessoa: {{pessoa.nome}}</h2>
+
+        <form @submit.prevent="deletePessoa">
+			<p> Esta ação é permanente! CUIDADO!!!</p>
+			<button type="submit" class="btn btn-danger" >Deletar</button>
+        </form>
+        
+    </template>
+	
+	<template id="pessoa-editar">
+        <p>Editar Pessoa</p>
+
+        <form @submit.prevent="atualizarPessoa">
+            <div class="form-group">
+                <label for="nome">Nome</label><br>
+                <input class="form-control" id="nome" type="text" v-model="pessoa.nome"  required   />
+            </div>
+
+            <div class="form-group">
+                <label for="profissao">Profissao</label><br>
+                <input class="form-control" id="profissao" type="text" v-model="pessoa.profissao"  required   />
+            </div>
+
+            <div class="form-group">
+                <label for="idade">Idade</label><br>
+                <input class="form-control" id="idade" type="text" v-model="pessoa.idade"  required   />
+            </div>
+			
+            <button type="submit" class="btn btn-primary" style="width: 58vw; margin-left: 7vw; margin-top: 50px">Atualizar</button>
+
+        </form>
+        
+    </template >
+    
+    <script>
+
+        var pessoas = [];
+
+
+        var ListarPessoa = Vue.extend({
+            template:'#pessoaLista',
+            
+            data: function(){
+                axios.get('http://localhost:8080/api/pessoas').then(resp =>{ 
+                    this.pessoas = (resp.data)
+                    console.log(resp)
+
+                
+                });
+                
+                return {pessoas: pessoas, searchKey:''}
+
+            }
+
+
+
+        });
+
+        var adicionarPessoa = Vue.extend({
+            template: '#adicionarPessoa',
+            data: function(){
+                return{
+                    nome: '',
+                    idade: '',
+                    profissao: ''
+
+                }
+            },
+            methods:{
+                criarPessoa(){
+                    axios.post('http://localhost:8080/api/cadastrarPessoa',{
+                        nome: this.nome,
+                        idade: this.idade,
+                        profissao: this.profissao
+                    })
+
+                    axios.get('http://localhost:8080/api/pessoas').then(resp =>{ 
+                    this.pessoas = (resp.data)
+                    console.log(resp)
+
+                    });
+
+                    router.go('/')
+                }
+
+            }
+
+        });
+
+		var pessoa;
+		
+		var pessoaDelete = Vue.extend({
+            template:'#pessoa-deletar',
+            data: function(){
+                axios.get('http://localhost:8080/api/pessoa/'+ this.$route.params.pessoa_id).then(resp =>{ 
+                    this.pessoa = (resp.data)
+                    console.log(resp)
+
+                    });
+				return{pessoa}
+            },
+			methods:{
+                deletePessoa: function(){
+                    axios.delete('http://localhost:8080/api/pessoa/'+ this.$route.params.pessoa_id).then(resp =>{ 
+
+                    });
+					
+					axios.get('http://localhost:8080/api/pessoas').then(resp =>{ 
+                    this.pessoas = (resp.data)
+                    console.log(resp)
+
+                    });
+					
+					router.go('/')
+                }
+
+            }
+
+        });
+		
+		var editarPessoa = Vue.extend({
+            template: '#pessoa-editar',
+            data: function(){
+                axios.get('http://localhost:8080/api/pessoa/'+this.$route.params.pessoa_id).then(resp =>{ 
+                    this.pessoa = (resp.data)
+                    console.log(resp)
+
+                });
+                return{pessoa}
+            },
+            methods:{
+                atualizarPessoa: function() {
+                    axios.put('http://localhost:8080/api/editarPessoa/',{ 
+                        id: this.pessoa.id,
+                        nome: this.pessoa.nome,
+                        idade: this.pessoa.idade,
+                        profissao: this.pessoa.profissao
+
+                    });
+
+                    axios.get('http://localhost:8080/api/pessoas').then(resp =>{ 
+                    this.pessoas = (resp.data)
+                    console.log(resp)
+
+                    });
+
+                    router.go('/')
+                }
+            }
+
+        });
+
+        var router = new VueRouter();
+        router.map({
+            '/' :{component: ListarPessoa},
+            '/adicionarPessoa' :{component: adicionarPessoa},
+			'/pessoaDelete/:pessoa_id/delete' :{component: pessoaDelete, name: 'pessoa-deletar'},
+			'/pessoa/:pessoa_id/editar' :{component: editarPessoa, name: 'pessoa-editar'}
+        })
+        
+        .start(Vue.extend({}),'#app')
+    </script>
+
+    
+</body>
+</html>

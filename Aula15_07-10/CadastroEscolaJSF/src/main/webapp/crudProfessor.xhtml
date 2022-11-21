@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Cadastro de professor</title>
+</h:head>
+<h:body>
+
+	<h:form id="formCadastro">
+		<h:panelGrid columns="2">
+			<h:outputLabel value="Nome: " />
+			<h:inputText id="campoNome" value="#{professorBean.professor.nome}" />
+
+			<h:outputLabel value="Cpf: " />
+			<h:inputText id="campoCpf" value="#{professorBean.professor.cpf}" />
+
+			<h:outputLabel value="Cidade: " />
+			<h:inputText id="campoCidade" value="#{professorBean.endereco.cidade}" />
+
+			<h:outputLabel value="Rua: " />
+			<h:inputText id="campoRua" value="#{professorBean.endereco.rua}" />
+
+			<h:outputLabel value="Número: " />
+			<h:inputText id="campoNumero" value="#{professorBean.endereco.numero}" />
+
+			<h:outputLabel value="Disciplina: " />
+			<h:inputText id="campoDisciplinar" value="#{professorBean.professor.disciplina}" />
+
+			<h:outputLabel value="Salário: " />
+			<h:inputText id="campoSalario" value="#{professorBean.professor.salario}" />
+
+			<h:commandButton value="Enviar" action="#{professorBean.salvarProfessor}" update="form formTabela" styleClass="btn" />
+		</h:panelGrid>
+	</h:form>
+	<h:form id="formTabela">
+		<h:dataTable value="#{professorBean.professores}" var="professorItem" border="2" id="tabela">
+
+			<h:column>
+				<f:facet name="header">Nome</f:facet>
+				#{professorItem.nome}
+			</h:column>
+			<h:column>
+				<f:facet name="header">Cpf</f:facet>
+				#{professorItem.cpf}
+			</h:column>
+			<h:column>
+				<f:facet name="header">Cidade</f:facet>
+				#{professorItem.endereco.cidade}
+			</h:column>
+			<h:column>
+				<f:facet name="header">Rua</f:facet>
+				#{professorItem.endereco.rua}
+			</h:column>
+			<h:column>
+				<f:facet name="header">Número</f:facet>
+				#{professorItem.endereco.numero}
+			</h:column>
+			<h:column>
+				<f:facet name="header">Disciplina</f:facet>
+				#{professorItem.disciplina}
+			</h:column>
+			<h:column>
+				<f:facet name="header">Salário</f:facet>
+				#{professorItem.salario}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Deletar</f:facet>
+				<h:commandLink id="deletar" value="Deletar" action="#{professorBean.deletarProfessor(professorItem)}" 
+						onclick="return confirm ('Deseja Deletar?')">
+				</h:commandLink>
+
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Editar</f:facet>
+				<h:commandLink id="editar" value="Editar" action="#{professorBean.editarProfessor(professorItem)}" 
+						onclick="return confirm ('Deseja Atualizar o Professor?')">
+				</h:commandLink>
+			</h:column>
+		</h:dataTable>
+
+	</h:form>
+</h:body>
+</html>

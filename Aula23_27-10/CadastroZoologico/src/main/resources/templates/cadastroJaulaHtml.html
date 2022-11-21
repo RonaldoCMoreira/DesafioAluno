@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Cadastrar Jaula</title>
+			
+			<!--Import Google Icon Font-->
+      		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      		<!--Import materialize.css-->
+      		<link type="text/css" rel="stylesheet" href="materialize/css/materialize.min.css"  media="screen,projection"/>
+
+      		<!--Let browser know website is optimized for mobile-->
+      		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	</head>
+	<body>
+		<header>
+				
+				<a href="/jaulasTabela" class="waves-effect waves-light btn"><i class="material-icons left">format_list_bulleted</i>Listar Jaulas</a>
+		
+		</header>
+		<form method="post" class="container">
+		
+			Nome Zoológico:<input type="text" value="" name="nomeZoologico"> 
+			Bloco:<input type="text" value="" name="bloco">
+			Número da Jaula:<input type="number" value="" name="numeroDaJaula">
+			Cuidadores:
+			<select required multiple name="cuidadores" id="cuidadoresId">   
+				<option  value="" disabled selected>Escolha um Cuidador</option>   
+				<option required th:name="*{cuidadores}" th:each="cuidador : ${cuidadores}" th:value="${cuidador.idCuidador}" th:text="${cuidador.nome}" ></option>
+			</select>
+			
+			<button class="waves-effect waves-light btn" type="submit">Enviar</button>
+			
+			
+		</form>
+		
+		<!--JavaScript at end of body for optimized loading-->
+      	<script type="text/javascript" src="materialize/js/materialize.min.js"></script>
+      	<script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.js"></script>
+      	<style type="text/css"></style> 
+      	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css"> 
+      	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script> 
+      	<script type="text/javascript">
+	      	window.onload=function(){
+	            $(document).ready(function() {
+	               $('select').material_select();
+	            });
+	      }
+      	</script>
+      
+	</body>
+</html>
